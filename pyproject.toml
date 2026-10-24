@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "streamcut-pipeline"
-version = "0.1.0"
+version = "0.1.1"
 description = "A small Colab pipeline: parallel ASR, topic planning, selected alignment and one-pass rendering"
 requires-python = ">=3.11,<3.14"
 readme = "README.md"

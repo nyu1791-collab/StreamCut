@@ -1,6 +1,6 @@
 # StreamCut
 
-[Colabで開く](https://colab.research.google.com/github/nyu1791-collab/StreamCut/blob/v0.1.0/notebooks/StreamCut.ipynb)
+[Colabで開く](https://colab.research.google.com/github/nyu1791-collab/StreamCut/blob/v0.1.1/notebooks/StreamCut.ipynb)
 
 配信アーカイブから話題別の字幕付き下書きを作る、新規開発の小さなPythonパイプライン。
 
@@ -116,7 +116,7 @@ streamcut export /path/to/job --config render-only.json --headlines headlines.js
 
 出力先は `exports/設定の識別子/clips/`。この入口で変更できるのは字幕・見出し・無音判定・符号化設定で、採用する発言範囲は変えません。
 
-`uv.lock`も同梱しています。依存を固定してローカルに導入する場合は `uv sync --locked --extra gpu --extra fetch`、開発・CPU検証は `uv sync --locked --extra vad --extra dev` を使います。Colabノートブックはタグ固定のコードをpipで導入し、実行環境の既存パッケージも利用します。
+`uv.lock`も同梱しています。依存を固定してローカルに導入する場合は `uv sync --locked --extra gpu --extra fetch`、開発・CPU検証は `uv sync --locked --extra vad --extra dev` を使います。Colabはチェックサム付きのuvと管理されたPython 3.12を準備し、同じlockで導入します。カーネル側のPython/ensurepipや既存パッケージに依存しません。
 
 ## 検証・設計
 
