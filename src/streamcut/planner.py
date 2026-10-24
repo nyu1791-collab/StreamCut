@@ -93,7 +93,8 @@ def complete(root, prompt, config, retry=False):
 def plan(root, units, config, retry=False):
     topics = []
     positions = {u["id"]: i for i, u in enumerate(units)}
-    for index, group in enumerate(chunks(units, config.plan_chars)):
+    groups = chunks(units, config.plan_chars)
+    for index, group in enumerate(groups):
         print(f"話題解析: チャンク {index + 1}", flush=True)
         request = {
             "instruction": (
@@ -105,6 +106,12 @@ def plan(root, units, config, retry=False):
             ),
             "units": [{k: u[k] for k in ("id", "start", "end", "text")} for u in group],
         }
+        if len(groups) == 1:
+            request["instruction"] += (
+                f"同じ応答内で最大{config.clips}本の採用区間と見出しも選んでください。"
+                "clips配列にstart_id,end_id,headlineを入れ、区間の重複を避けてください。"
+                "topicsとclipsの両方を含むJSONを返してください。"
+            )
         result = complete(root, json.dumps(request, ensure_ascii=False), config, retry)
         rows = result.get("topics")
         if not isinstance(rows, list) or not rows or len(rows) > len(group):
@@ -126,6 +133,8 @@ def plan(root, units, config, retry=False):
                 topics.append(item)
     topics.sort(key=lambda t: positions[t["start_id"]])
     write(root / "topics.json", topics)
+    if len(groups) == 1:
+        return {"clips": result.get("clips")}
     request = {
         "instruction": (
             f"以下から最大{config.clips}本の、独立して理解できる切り抜きを選んでください。"

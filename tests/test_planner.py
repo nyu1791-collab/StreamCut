@@ -4,8 +4,8 @@ import urllib.error
 
 import pytest
 
-from streamcut.model import Config, CutError
-from streamcut.planner import complete
+from streamcut.model import Config, CutError, validate_units
+from streamcut.planner import complete, plan
 
 
 def test_confirmed_llm_response_is_cached_without_resending(tmp_path, monkeypatch):
@@ -58,3 +58,30 @@ def test_truncated_response_cannot_be_used_as_a_selection(tmp_path, monkeypatch)
     )
     with pytest.raises(CutError, match="truncated"):
         complete(tmp_path, "prompt", Config(llm_model="explicit-test-model"))
+
+
+def test_single_chunk_combines_topics_and_clip_selection_in_one_api_call(tmp_path, monkeypatch):
+    calls = []
+    chosen = {"start_id": "u000001", "end_id": "u000002", "headline": "話題"}
+
+    def response(root, prompt, config, retry):
+        calls.append(prompt)
+        return {
+            "topics": [
+                {
+                    "start_id": "u000001",
+                    "end_id": "u000002",
+                    "title": "話題",
+                    "summary": "前振りと結末",
+                }
+            ],
+            "clips": [chosen],
+        }
+
+    monkeypatch.setattr("streamcut.planner.complete", response)
+    units = validate_units(
+        [{"start": 0, "end": 30, "text": "前振り"}, {"start": 30, "end": 60, "text": "結末"}], 60
+    )
+    assert plan(tmp_path, units, Config(llm_model="test")) == {"clips": [chosen]}
+    assert len(calls) == 1
+    assert (tmp_path / "topics.json").is_file()
