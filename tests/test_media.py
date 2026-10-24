@@ -1,6 +1,7 @@
 import json
 import shutil
 import subprocess
+import sys
 import wave
 
 import numpy as np
@@ -12,6 +13,29 @@ from streamcut.model import Config
 from streamcut.pipeline import reexport, run
 from streamcut.store import digest, read
 from streamcut.timeline import frame_plan, map_words, output_seconds
+
+
+def test_url_fetch_uses_active_python_without_requiring_venv_on_path(tmp_path, monkeypatch):
+    from streamcut.media import acquire
+
+    calls = []
+
+    def download(args, log):
+        calls.append(args)
+        path = tmp_path / "input/source.mkv"
+        path.write_bytes(b"downloaded")
+        receipt = args[args.index("--print-to-file") + 2]
+        Path(receipt).write_text(str(path))
+
+    from pathlib import Path
+
+    monkeypatch.setattr("streamcut.media.importlib.util.find_spec", lambda name: object())
+    monkeypatch.setattr("streamcut.media.command", download)
+    monkeypatch.setattr("streamcut.media.probe", lambda path: {"duration": 60})
+    path, _ = acquire("https://example.com/archive", tmp_path)
+    assert path.exists()
+    assert calls[0][:3] == [sys.executable, "-m", "yt_dlp"]
+
 
 pytestmark = pytest.mark.integration
 

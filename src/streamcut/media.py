@@ -1,10 +1,12 @@
 """FFmpeg input handling and single-pass, frame-budgeted rendering."""
 
+import importlib.util
 import json
 import math
 import os
 import shutil
 import subprocess
+import sys
 import tempfile
 import wave
 from fractions import Fraction
@@ -63,12 +65,14 @@ def acquire(source, root):
     destination = root / "input"
     destination.mkdir(exist_ok=True)
     if source.startswith("https://"):
-        if not shutil.which("yt-dlp"):
+        if importlib.util.find_spec("yt_dlp") is None:
             raise CutError("install the fetch extra for URL inputs")
         receipt = destination / "download-path.txt"
         command(
             [
-                "yt-dlp",
+                sys.executable,
+                "-m",
+                "yt_dlp",
                 "--no-playlist",
                 "--no-progress",
                 "--no-warnings",
