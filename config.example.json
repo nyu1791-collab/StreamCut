@@ -1,0 +1,21 @@
+{
+  "language": "ja",
+  "asr_model": "turbo",
+  "batch_size": 8,
+  "gpu_workers": 1,
+  "render_workers": 1,
+  "clips": 3,
+  "min_seconds": 20,
+  "max_seconds": 600,
+  "silence_cut": true,
+  "silence_gap": 1.5,
+  "silence_pad": 0.2,
+  "silence_db": -40,
+  "encoder": "auto",
+  "burn_in": true,
+  "font": "Noto Sans CJK JP",
+  "font_size": 52,
+  "llm_base_url": "https://api.openai.com/v1",
+  "llm_model": "",
+  "llm_key_env": "STREAMCUT_API_KEY"
+}
