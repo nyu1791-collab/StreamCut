@@ -76,6 +76,8 @@ def acquire(source, root):
                 "--no-playlist",
                 "--no-progress",
                 "--no-warnings",
+                "--compat-options",
+                "no-certifi",
                 "--match-filter",
                 "!is_live",
                 "--restrict-filenames",
