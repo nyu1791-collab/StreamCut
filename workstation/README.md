@@ -30,6 +30,8 @@ py -3.12 workstation/manage.py package C:/completed/clips C:/AutomationData/publ
 
 完成MP4/MOV/MKV/WebM、対応するSRT/ASS、既存カバーだけをコピーする。本文・字幕時刻・元ファイルを変更せず、動画の再エンコードやAI呼び出しはしない。新しい出力先だけを使う。投稿文は既存名または `--title` の内容であり、AIが新しく考えた文ではない。
 
+字幕は動画と同名の `動画名.srt/.ass` を優先する。`captions.srt/.ass` や `subtitles.srt/.ass` は、そのフォルダの動画が1本で候補も1つの場合だけ使う。対応が曖昧な字幕は付けず、結果と `package.json` の `warnings` に動画名・候補名を記録する。必要なら元字幕を保ったまま動画と同名の複製を用意する。出力先はフォルダリンクや `..` を解決した実際のパスで判定し、元フォルダ内へは作らない。
+
 `manifest.json` は相対パスなのでフォルダごと移せる。ClipForge-Deliveryの「素材の一括取り込み」でこのファイルを指定する。Deliveryが対応するMP4だけがその取り込み一覧に入り、MOV等は変換したふりをせずパック内にそのまま保持する。フォルダには `package.json` と「投稿用メモ.txt」も作る。内部のファイルを保ったままフォルダ全体を移す。
 
 ## CapCutや制作状態の素材パスを移行する
