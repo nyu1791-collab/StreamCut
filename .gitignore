@@ -19,3 +19,10 @@ outputs/
 *.srt
 *.ass
 !tests/fixtures/**
+
+# PC-local optional automation state
+.venv-research/
+workstation/local.json
+workstation/*.local.json
+
+*.pyc

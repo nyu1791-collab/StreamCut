@@ -1,3 +1,5 @@
+新しいWindows PCへの導入・素材移行・投稿用素材パックは [PC移行ガイド](workstation/README.md) を参照してください。既存の制作入口とモデルは維持します。
+
 # StreamCut
 
 [Colabで開く](https://colab.research.google.com/github/nyu1791-collab/StreamCut/blob/v0.1.1/notebooks/StreamCut.ipynb)
